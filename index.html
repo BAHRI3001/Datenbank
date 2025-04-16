@@ -169,11 +169,14 @@
         entry.style.display = entry.textContent.toLowerCase().includes(term) ? 'block' : 'none';
       });
     }
+</script>
+</body>
+</html>
+
   </script>
 
    const gespeicherteEintraege = JSON.parse(localStorage.getItem("eintraege")) || [];
     gespeicherteEintraege.push({ name, einnahmen, info });
     localStorage.setItem("eintraege", JSON.stringify(gespeicherteEintraege));
 
-</body>
-</html>
+</script>
