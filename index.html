@@ -171,5 +171,9 @@
     }
   </script>
 
+   const gespeicherteEintraege = JSON.parse(localStorage.getItem("eintraege")) || [];
+    gespeicherteEintraege.push({ name, einnahmen, info });
+    localStorage.setItem("eintraege", JSON.stringify(gespeicherteEintraege));
+
 </body>
 </html>
