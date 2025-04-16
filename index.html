@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Bahri's Datenbank</title>
+  <style>
+    body {
+      background-color: #0f1115;
+      color: white;
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .search-box {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      margin-bottom: 2rem;
+    }
+
+    input, textarea, button {
+      border: none;
+      border-radius: 6px;
+      padding: 0.75rem;
+      background-color: #1e1f24;
+      color: white;
+      font-size: 1rem;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #7e7e7e;
+    }
+
+    button {
+      background-color: #91caff;
+      color: black;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    button:hover {
+      background-color: #72b6f5;
+    }
+
+    .form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .submit-section {
+      margin-top: 1rem;
+    }
+
+    .entries {
+      margin-top: 2rem;
+    }
+
+    .entry {
+      background-color: #102436;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-top: 0.5rem;
+    }
+
+    .no-data {
+      background-color: #112233;
+      padding: 1rem;
+      border-radius: 6px;
+      color: #cccccc;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Bahri's Datenbank</h1>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Name suchen...">
+    <button onclick="searchEntry()">
+      🔍 Suchen
+    </button>
+  </div>
+
+  <h2>Neue Einträge</h2>
+  <div class="form">
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="revenue" placeholder="z.B., 123, 456, 789">
+    <textarea id="info" placeholder="Zusätzliche Informationen..."></textarea>
+  </div>
+
+  <div class="submit-section">
+    <button onclick="addEntry()">💾 Eintragen</button>
+  </div>
+
+  <div class="entries">
+    <h2>Alle Einträge</h2>
+    <div id="entry-list">
+      <div class="no-data">Noch keine Daten</div>
+    </div>
+  </div>
+
+  <script>
+    const entryList = document.getElementById('entry-list');
+
+    function addEntry() {
+      const name = document.getElementById('name').value.trim();
+      const revenue = document.getElementById('revenue').value.trim();
+      const info = document.getElementById('info').value.trim();
+
+      if (!name || !revenue) {
+        alert("Bitte Name und Einnahmen eingeben!");
+        return;
+      }
+
+      const entry = document.createElement('div');
+      entry.className = 'entry';
+      entry.innerHTML = `
+        <strong>Name:</strong> ${name}<br>
+        <strong>Einnahmen:</strong> ${revenue}<br>
+        <strong>Informationen:</strong> ${info || 'Keine'}
+      `;
+
+      if (entryList.querySelector('.no-data')) {
+        entryList.innerHTML = '';
+      }
+
+      entryList.appendChild(entry);
+
+      document.getElementById('name').value = '';
+      document.getElementById('revenue').value = '';
+      document.getElementById('info').value = '';
+    }
+
+    function searchEntry() {
+      const term = document.getElementById('search').value.trim().toLowerCase();
+      const entries = entryList.querySelectorAll('.entry');
+
+      entries.forEach(entry => {
+        entry.style.display = entry.textContent.toLowerCase().includes(term) ? 'block' : 'none';
+      });
+    }
+  </script>
+
+</body>
+</html>
