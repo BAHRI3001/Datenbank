@@ -96,7 +96,9 @@
 
   <div class="search-box">
     <input type="text" id="search" placeholder="Name suchen...">
-    <button onclick="searchEntry()">🔍 Suchen</button>
+    <button onclick="searchEntry()">
+      🔍 Suchen
+    </button>
   </div>
 
   <h2>Neue Einträge</h2>
@@ -120,64 +122,39 @@
   <script>
     const entryList = document.getElementById('entry-list');
 
-    // Bestehende Einträge laden
-    window.addEventListener("DOMContentLoaded", () => {
-      const gespeicherteEintraege = JSON.parse(localStorage.getItem("eintraege")) || [];
-      if (gespeicherteEintraege.length > 0) {
-        entryList.innerHTML = '';
-        gespeicherteEintraege.forEach(entry => {
-          addEntryToDOM(entry.name, entry.einnahmen, entry.info);
-        });
-      }
-    });
-
     function addEntry() {
       const name = document.getElementById('name').value.trim();
-      const einnahmen = document.getElementById('revenue').value.trim();
+      const revenue = document.getElementById('revenue').value.trim();
       const info = document.getElementById('info').value.trim();
 
-      if (!name || !einnahmen) {
+      if (!name || !revenue) {
         alert("Bitte Name und Einnahmen eingeben!");
         return;
       }
 
-      addEntryToDOM(name, einnahmen, info);
-
-      const gespeicherteEintraege = JSON.parse(localStorage.getItem("eintraege")) || [];
-      gespeicherteEintraege.push({ name, einnahmen, info });
-      localStorage.setItem("eintraege", JSON.stringify(gespeicherteEintraege));
-
-      document.getElementById('name').value = '';
-      document.getElementById('revenue').value = '';
-      document.getElementById('info').value = '';
-    }
-
-    function addEntryToDOM(name, einnahmen, info) {
       const entry = document.createElement('div');
       entry.className = 'entry';
-      entry.innerHTML = `
+      entry.innerHTML = 
         <strong>Name:</strong> ${name}<br>
-        <strong>Einnahmen:</strong> ${einnahmen}<br>
+        <strong>Einnahmen:</strong> ${revenue}<br>
         <strong>Informationen:</strong> ${info || 'Keine'}<br>
-        <button onclick="deleteEntry(this, '${name}', '${einnahmen}', \`${info}\`)">🗑️ Löschen</button>
-      `;
+        <button onclick="deleteEntry(this)">🗑️ Löschen</button>
+      ;
 
       if (entryList.querySelector('.no-data')) {
         entryList.innerHTML = '';
       }
 
       entryList.appendChild(entry);
+
+      document.getElementById('name').value = '';
+      document.getElementById('revenue').value = '';
+      document.getElementById('info').value = '';
     }
 
-    function deleteEntry(button, name, einnahmen, info) {
+    function deleteEntry(button) {
       const entry = button.parentElement;
       entry.remove();
-
-      let gespeicherteEintraege = JSON.parse(localStorage.getItem("eintraege")) || [];
-      gespeicherteEintraege = gespeicherteEintraege.filter(e =>
-        !(e.name === name && e.einnahmen === einnahmen && e.info === info)
-      );
-      localStorage.setItem("eintraege", JSON.stringify(gespeicherteEintraege));
 
       if (entryList.children.length === 0) {
         entryList.innerHTML = '<div class="no-data">Noch keine Daten</div>';
@@ -192,7 +169,6 @@
         entry.style.display = entry.textContent.toLowerCase().includes(term) ? 'block' : 'none';
       });
     }
-  </script>
-
+</script>
 </body>
 </html>
