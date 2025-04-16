@@ -11,16 +11,15 @@
       padding: 2rem;
     }
 
-    .hidden {
-      display: none;
-    }
-
     h1 {
       font-size: 2.5rem;
       margin-bottom: 2rem;
     }
 
-    .login-box, .search-box, .form, .submit-section, .entries {
+    .search-box {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
       margin-bottom: 2rem;
     }
 
@@ -33,7 +32,8 @@
       font-size: 1rem;
     }
 
-    input::placeholder, textarea::placeholder {
+    input::placeholder,
+    textarea::placeholder {
       color: #7e7e7e;
     }
 
@@ -54,6 +54,15 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .submit-section {
+      margin-top: 1rem;
+    }
+
+    .entries {
+      margin-top: 2rem;
     }
 
     .entry {
@@ -61,6 +70,7 @@
       padding: 1rem;
       border-radius: 6px;
       margin-top: 0.5rem;
+      position: relative;
     }
 
     .no-data {
@@ -69,63 +79,54 @@
       border-radius: 6px;
       color: #cccccc;
     }
+
+    .delete-button {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background-color: #ff5c5c;
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .delete-button:hover {
+      background-color: #e74c3c;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Login-Bereich -->
-  <div id="login-section">
-    <h1>🔐 Anmeldung erforderlich</h1>
-    <div class="form">
-      <input type="text" id="username" placeholder="Benutzername">
-      <input type="password" id="password" placeholder="Passwort">
-    </div>
-    <button onclick="checkLogin()">🔓 Login</button>
-    <p id="login-error" style="color: red;"></p>
+  <h1>Bahri's Datenbank</h1>
+
+  <div class="search-box">
+    <input type="text" id="search" placeholder="Name suchen...">
+    <button onclick="searchEntry()">
+      🔍 Suchen
+    </button>
   </div>
 
-  <!-- Datenbank-Bereich -->
-  <div id="database-section" class="hidden">
-    <h1>Bahri's Datenbank</h1>
+  <h2>Neue Einträge</h2>
+  <div class="form">
+    <input type="text" id="name" placeholder="Name">
+    <input type="text" id="revenue" placeholder="z.B., 123, 456, 789">
+    <textarea id="info" placeholder="Zusätzliche Informationen..."></textarea>
+  </div>
 
-    <div class="search-box">
-      <input type="text" id="search" placeholder="Name suchen...">
-      <button onclick="searchEntry()">🔍 Suchen</button>
-    </div>
+  <div class="submit-section">
+    <button onclick="addEntry()">💾 Eintragen</button>
+  </div>
 
-    <h2>Neue Einträge</h2>
-    <div class="form">
-      <input type="text" id="name" placeholder="Name">
-      <input type="text" id="revenue" placeholder="z.B., 123, 456, 789">
-      <textarea id="info" placeholder="Zusätzliche Informationen..."></textarea>
-    </div>
-
-    <div class="submit-section">
-      <button onclick="addEntry()">💾 Eintragen</button>
-    </div>
-
-    <div class="entries">
-      <h2>Alle Einträge</h2>
-      <div id="entry-list">
-        <div class="no-data">Noch keine Daten</div>
-      </div>
+  <div class="entries">
+    <h2>Alle Einträge</h2>
+    <div id="entry-list">
+      <div class="no-data">Noch keine Daten</div>
     </div>
   </div>
 
   <script>
     const entryList = document.getElementById('entry-list');
-
-    function checkLogin() {
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-
-      if (username === 'Bahri' && password === 'Cinka123!') {
-        document.getElementById('login-section').classList.add('hidden');
-        document.getElementById('database-section').classList.remove('hidden');
-      } else {
-        document.getElementById('login-error').textContent = 'Falscher Benutzername oder Passwort!';
-      }
-    }
 
     function addEntry() {
       const name = document.getElementById('name').value.trim();
@@ -139,10 +140,12 @@
 
       const entry = document.createElement('div');
       entry.className = 'entry';
+
       entry.innerHTML = `
         <strong>Name:</strong> ${name}<br>
         <strong>Einnahmen:</strong> ${revenue}<br>
         <strong>Informationen:</strong> ${info || 'Keine'}
+        <button class="delete-button" onclick="deleteEntry(this)">🗑️ Löschen</button>
       `;
 
       if (entryList.querySelector('.no-data')) {
@@ -154,6 +157,19 @@
       document.getElementById('name').value = '';
       document.getElementById('revenue').value = '';
       document.getElementById('info').value = '';
+    }
+
+    function deleteEntry(button) {
+      const entry = button.parentElement;
+      entry.remove();
+
+      // Falls alles gelöscht wurde, Hinweis anzeigen
+      if (entryList.children.length === 0) {
+        const noData = document.createElement('div');
+        noData.className = 'no-data';
+        noData.textContent = 'Noch keine Daten';
+        entryList.appendChild(noData);
+      }
     }
 
     function searchEntry() {
