@@ -70,7 +70,16 @@
       padding: 1rem;
       border-radius: 6px;
       margin-top: 0.5rem;
-      position: relative;
+    }
+
+    .entry button {
+      margin-top: 0.5rem;
+      background-color: #ff8181;
+      color: black;
+    }
+
+    .entry button:hover {
+      background-color: #ff4c4c;
     }
 
     .no-data {
@@ -78,21 +87,6 @@
       padding: 1rem;
       border-radius: 6px;
       color: #cccccc;
-    }
-
-    .delete-button {
-      position: absolute;
-      top: 1rem;
-      right: 1rem;
-      background-color: #ff5c5c;
-      color: white;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      font-size: 0.9rem;
-    }
-
-    .delete-button:hover {
-      background-color: #e74c3c;
     }
   </style>
 </head>
@@ -140,12 +134,11 @@
 
       const entry = document.createElement('div');
       entry.className = 'entry';
-
       entry.innerHTML = `
         <strong>Name:</strong> ${name}<br>
         <strong>Einnahmen:</strong> ${revenue}<br>
-        <strong>Informationen:</strong> ${info || 'Keine'}
-        <button class="delete-button" onclick="deleteEntry(this)">🗑️ Löschen</button>
+        <strong>Informationen:</strong> ${info || 'Keine'}<br>
+        <button onclick="deleteEntry(this)">🗑️ Löschen</button>
       `;
 
       if (entryList.querySelector('.no-data')) {
@@ -163,12 +156,8 @@
       const entry = button.parentElement;
       entry.remove();
 
-      // Falls alles gelöscht wurde, Hinweis anzeigen
       if (entryList.children.length === 0) {
-        const noData = document.createElement('div');
-        noData.className = 'no-data';
-        noData.textContent = 'Noch keine Daten';
-        entryList.appendChild(noData);
+        entryList.innerHTML = '<div class="no-data">Noch keine Daten</div>';
       }
     }
 
