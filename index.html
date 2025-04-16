@@ -11,15 +11,16 @@
       padding: 2rem;
     }
 
+    .hidden {
+      display: none;
+    }
+
     h1 {
       font-size: 2.5rem;
       margin-bottom: 2rem;
     }
 
-    .search-box {
-      display: flex;
-      justify-content: flex-end;
-      gap: 0.5rem;
+    .login-box, .search-box, .form, .submit-section, .entries {
       margin-bottom: 2rem;
     }
 
@@ -32,8 +33,7 @@
       font-size: 1rem;
     }
 
-    input::placeholder,
-    textarea::placeholder {
+    input::placeholder, textarea::placeholder {
       color: #7e7e7e;
     }
 
@@ -54,15 +54,6 @@
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .submit-section {
-      margin-top: 1rem;
-    }
-
-    .entries {
-      margin-top: 2rem;
     }
 
     .entry {
@@ -82,35 +73,59 @@
 </head>
 <body>
 
-  <h1>Bahri's Datenbank</h1>
-
-  <div class="search-box">
-    <input type="text" id="search" placeholder="Name suchen...">
-    <button onclick="searchEntry()">
-      🔍 Suchen
-    </button>
+  <!-- Login-Bereich -->
+  <div id="login-section">
+    <h1>🔐 Anmeldung erforderlich</h1>
+    <div class="form">
+      <input type="text" id="username" placeholder="Benutzername">
+      <input type="password" id="password" placeholder="Passwort">
+    </div>
+    <button onclick="checkLogin()">🔓 Login</button>
+    <p id="login-error" style="color: red;"></p>
   </div>
 
-  <h2>Neue Einträge</h2>
-  <div class="form">
-    <input type="text" id="name" placeholder="Name">
-    <input type="text" id="revenue" placeholder="z.B., 123, 456, 789">
-    <textarea id="info" placeholder="Zusätzliche Informationen..."></textarea>
-  </div>
+  <!-- Datenbank-Bereich -->
+  <div id="database-section" class="hidden">
+    <h1>Bahri's Datenbank</h1>
 
-  <div class="submit-section">
-    <button onclick="addEntry()">💾 Eintragen</button>
-  </div>
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Name suchen...">
+      <button onclick="searchEntry()">🔍 Suchen</button>
+    </div>
 
-  <div class="entries">
-    <h2>Alle Einträge</h2>
-    <div id="entry-list">
-      <div class="no-data">Noch keine Daten</div>
+    <h2>Neue Einträge</h2>
+    <div class="form">
+      <input type="text" id="name" placeholder="Name">
+      <input type="text" id="revenue" placeholder="z.B., 123, 456, 789">
+      <textarea id="info" placeholder="Zusätzliche Informationen..."></textarea>
+    </div>
+
+    <div class="submit-section">
+      <button onclick="addEntry()">💾 Eintragen</button>
+    </div>
+
+    <div class="entries">
+      <h2>Alle Einträge</h2>
+      <div id="entry-list">
+        <div class="no-data">Noch keine Daten</div>
+      </div>
     </div>
   </div>
 
   <script>
     const entryList = document.getElementById('entry-list');
+
+    function checkLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value;
+
+      if (username === 'Bahri' && password === 'Cinka123!') {
+        document.getElementById('login-section').classList.add('hidden');
+        document.getElementById('database-section').classList.remove('hidden');
+      } else {
+        document.getElementById('login-error').textContent = 'Falscher Benutzername oder Passwort!';
+      }
+    }
 
     function addEntry() {
       const name = document.getElementById('name').value.trim();
